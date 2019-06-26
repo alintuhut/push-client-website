@@ -33,8 +33,6 @@ const askForPermissionToReceiveNotifications = async () => {
       navigator.serviceWorker.register('sw.js').then(registration => {
         showLocalNotification('hello', payload.data.message, registration)
       });
-
-      // ...
     });
 
     return token;
@@ -88,5 +86,4 @@ const main = async () => {
 }
 setTimeout(() => {
   initializeFirebase();
-}, 200)
-// main(); we will not call main in the beginning.
+}, 500)
