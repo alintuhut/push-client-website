@@ -1,8 +1,7 @@
-import { initializeFirebase } from './push-notification';
-import { askForPermissionToReceiveNotifications } from './push-notification';
+import { initializeFirebase, askForPermissionToReceiveNotifications } from './push-notification';
 
 initializeFirebase();
 
-const askForPermission = function() {
+const askForPermission = () => {
   askForPermissionToReceiveNotifications();
 }
