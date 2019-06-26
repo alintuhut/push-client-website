@@ -61,9 +61,25 @@ const check = () => {
   }
 }
 
+navigator.serviceWorker
+  .register('sw.js')
+  .then(function(registration) {
+             console.log('Service worker successfully registered.');
+             return registration;
+         })
+  .then((registration) => {
+      firebase.messaging().useServiceWorker(registration);
+
+      askForPermissionToReceiveNotifications();
+
+      })
+  .catch(function(err) {
+    console.error('Unable to register service worker.', err);
+  });
+
 const main = async () => {
   check();
-  registerServiceWorker();
+  //registerServiceWorker();
   askForPermissionToReceiveNotifications();
 }
 setTimeout(() => {
