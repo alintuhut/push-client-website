@@ -2,6 +2,6 @@ import { initializeFirebase, askForPermissionToReceiveNotifications } from './pu
 
 initializeFirebase();
 
-const askForPermission = () => {
+const askForPermission = function() {
   askForPermissionToReceiveNotifications();
 }
