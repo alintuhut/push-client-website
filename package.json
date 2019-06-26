@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/alintuhut/push-client-website#readme",
   "dependencies": {
-    "firebase": "^6.2.3"
+    "firebase": "^6.2.3",
+    "vue": "^2.6.10"
   }
 }

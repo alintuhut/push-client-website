@@ -1,4 +1,9 @@
-import { initializeFirebase, askForPermissionToReceiveNotifications } from './push-notification';
+import Vue from 'vue';
+import App from './App';
 
-initializeFirebase();
-askForPermissionToReceiveNotifications();
+new Vue({
+  el: '#app',
+  render: h => h(App)
+});
+
+
