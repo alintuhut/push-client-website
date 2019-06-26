@@ -28,6 +28,10 @@ const askForPermissionToReceiveNotifications = async () => {
     await messaging.requestPermission();
     const token = await messaging.getToken();
     console.log('token is:', token);
+    messaging.onMessage((payload) => {
+      console.log('Message received. ', payload);
+      // ...
+    });
 
     return token;
   } catch (error) {
