@@ -30,6 +30,13 @@ const askForPermissionToReceiveNotifications = async () => {
     console.log('token is:', token);
     messaging.onMessage((payload) => {
       console.log('Message received. ', payload);
+      const notificationTitle = 'Background Message Title';
+      const notificationOptions = {
+        body: 'Background Message body.'
+      };
+
+      return self.registration.showNotification(notificationTitle,
+          notificationOptions);
       // ...
     });
 
