@@ -84,5 +84,5 @@ const main = async () => {
 }
 setTimeout(() => {
   initializeFirebase();
-}, 200)
+}, 2000)
 // main(); we will not call main in the beginning.
