@@ -64,10 +64,9 @@ const check = () => {
 
 const main = async () => {
   check();
-  askForPermissionToReceiveNotifications();
+  registerServiceWorker();
 }
 setTimeout(() => {
   initializeFirebase();
-  registerServiceWorker();
-}, 2000)
+}, 200)
 // main(); we will not call main in the beginning.
