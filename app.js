@@ -24,6 +24,7 @@ const initializeFirebase = () => {
 const askForPermissionToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
+    messaging.usePublicVapidKey("BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8");
     await messaging.requestPermission();
     const token = await messaging.getToken();
     console.log('token is:', token);
