@@ -30,13 +30,7 @@ const askForPermissionToReceiveNotifications = async () => {
     console.log('token is:', token);
     messaging.onMessage((payload) => {
       console.log('Message received. ', payload);
-      const notificationTitle = 'Background Message Title';
-      const notificationOptions = {
-        body: 'Background Message body.'
-      };
-
-      return self.registration.showNotification(notificationTitle,
-          notificationOptions);
+      showLocalNotification('hello', payload.data.message, registerServiceWorker())
       // ...
     });
 
@@ -47,7 +41,7 @@ const askForPermissionToReceiveNotifications = async () => {
 }
 
 const registerServiceWorker = () => {
-  navigator.serviceWorker
+  return navigator.serviceWorker
   .register('sw.js')
   .then(function(registration) {
              console.log('Service worker successfully registered.');
@@ -71,6 +65,18 @@ const check = () => {
   if (!('PushManager' in window)) {
     throw new Error('No Push API Support!')
   }
+}
+
+const showLocalNotification = (title, body, swRegistration) => {
+  const options = {
+    body,
+    "tag": "request",
+    "actions": [
+      { "action": "yes", "title": "Yes" },
+      { "action": "no", "title": "No" }
+    ]
+  };
+  swRegistration.showNotification(title, options);
 }
 
 const main = async () => {
