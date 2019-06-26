@@ -30,7 +30,10 @@ const askForPermissionToReceiveNotifications = async () => {
     console.log('token is:', token);
     messaging.onMessage((payload) => {
       console.log('Message received. ', payload);
-      showLocalNotification('hello', payload.data.message, registerServiceWorker())
+      navigator.serviceWorker.register('sw.js').then(registration => {
+        showLocalNotification('hello', payload.data.message, registration)
+      });
+
       // ...
     });
 
@@ -41,7 +44,7 @@ const askForPermissionToReceiveNotifications = async () => {
 }
 
 const registerServiceWorker = () => {
-  return navigator.serviceWorker
+  navigator.serviceWorker
   .register('sw.js')
   .then(function(registration) {
              console.log('Service worker successfully registered.');
