@@ -1,7 +1,20 @@
 function loadScript(url) {
-  var script = document.createElement('script');
-  script.src = url;
-  document.head.appendChild(script);
+  return new Promise(resolve => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    script.onload = function() {
+      resolve(true);
+    };
+    document.head.appendChild(script);
+  });
+}
+
+function loadDependencies() {
+  return Promise.all([
+    loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js'),
+    loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-messaging.js')
+  ]);
 }
 
 loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js');
@@ -29,29 +42,29 @@ const askForPermissionToReceiveNotifications = async () => {
     const token = await messaging.getToken();
     console.log('token is:', token);
 
+    messaging.onMessage(payload => {
+      console.log('Message received. ', payload);
+      showLocalNotification('hello', payload.data.message, self.registration)
+    });
 
     return token;
+
   } catch (error) {
     console.error(error);
   }
 }
 
-const registerServiceWorker = () => {
-  navigator.serviceWorker
-  .register('sw.js')
-  .then(function(registration) {
-             console.log('Service worker successfully registered.');
-             return registration;
-         })
-  .then((registration) => {
-      firebase.messaging().useServiceWorker(registration);
+const registerServiceWorker = async () => {
+  try {
+    const registration = await navigator.serviceWorker.register('sw.js');
 
-      askForPermissionToReceiveNotifications();
+    console.log('Service worker successfully registered.', registration);
 
-      })
-  .catch(function(err) {
-    console.error('Unable to register service worker.', err);
-  });
+    firebase.messaging().useServiceWorker(registration);
+    askForPermissionToReceiveNotifications();
+  } catch (error) {
+    console.error('Unable to register service worker.', error);
+  }
 }
 
 const check = () => {
@@ -75,10 +88,12 @@ const showLocalNotification = (title, body, swRegistration) => {
   swRegistration.showNotification(title, options);
 }
 
-const main = async () => {
+const askForPermission = async () => {
   check();
   registerServiceWorker();
 }
-setTimeout(() => {
+
+const init = async () => {
+  await loadDependencies();
   initializeFirebase();
-}, 500)
+}
