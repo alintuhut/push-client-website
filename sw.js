@@ -20,7 +20,12 @@ messaging.setBackgroundMessageHandler(function(payload) {
   // Customize notification here
   const notificationTitle = 'Background Message Title';
   const notificationOptions = {
-    body: 'Background Message body.'
+    body: payload.data.message,
+    "tag": "request",
+    "actions": [
+      { "action": "yes", "title": "Yes" },
+      { "action": "no", "title": "No" }
+    ]
   };
 
   return self.registration.showNotification(notificationTitle,
