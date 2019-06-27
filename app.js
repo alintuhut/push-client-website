@@ -38,8 +38,6 @@ const askForPermissionToReceiveNotifications = async () => {
     const token = await messaging.getToken();
     console.log('token is:', token);
 
-    sendMessageToSW(`This is a token ${token}`);
-
     messaging.onMessage(payload => {
       console.log('Message received. ', payload);
       navigator.serviceWorker.register('sw.js').then(registration => {
