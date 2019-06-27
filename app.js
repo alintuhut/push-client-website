@@ -82,6 +82,7 @@ const check = () => {
     throw new Error('No Service Worker support!')
   } else {
     const channel = new BroadcastChannel('sw-messages');
+    channel.postMessage({title: 'Hello from CLIENT'});
     channel.addEventListener('message', event => {
       console.log('Received', event.data);
     });
