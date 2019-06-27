@@ -15,6 +15,12 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
+self.onmessage = function(e) {
+  const channel = new BroadcastChannel('app-channel');
+  channel.postMessage(`hello from sw ${e.data}`);
+};
+
+
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
   // Customize notification here
@@ -40,10 +46,3 @@ const handlePush = async (event) => {
 
 self.addEventListener('pushsubscriptionchange', (event) =>
                       event.waitUntil(handlePush(event)));
-
-self.addEventListener('message', function(event){
-  console.log("SW Received Message: " + event.data);
-});
-
-const channel = new BroadcastChannel('sw-messages');
-channel.postMessage({title: 'Hello from SW'});
