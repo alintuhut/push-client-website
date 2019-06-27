@@ -91,12 +91,20 @@ const check = () => {
     console.log('In app.js:', e.data);
   };
 
-  const messageChannel = new MessageChannel();
+  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+    // Let's see if you have a subscription already
+    return serviceWorkerRegistration.pushManager.getSubscription();
+  })
+  .then(function(subscription) {
+    if (!subscription) {
+      // You do not have subscription
+    }
+    // You have subscription.
+    // Send data to service worker
+    const messageChannel = new MessageChannel();
+    navigator.serviceWorker.controller.postMessage('hello from app.js', [messageChannel.port2]);
 
-  // Send the service worker a message to clear the cache.
-  // We can't use a BroadcastChannel for this because the
-  // service worker may need to be woken up. MessageChannels do that.
-  navigator.serviceWorker.controller.postMessage('hello from app.js', [messageChannel.port2]);
+  })
 };
 
 const showLocalNotification = (title, body, swRegistration) => {
