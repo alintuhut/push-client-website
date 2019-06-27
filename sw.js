@@ -49,10 +49,3 @@ self.addEventListener('pushsubscriptionchange', event =>
 self.addEventListener('notificationclick', function(event) {
   console.log('On notification click: ', event.action);
 });
-
-navigator.permissions.query({name:'notification'}).then(function(permissionStatus) {
-  console.log('notification permission state is ', permissionStatus.state);
-  permissionStatus.onchange = function() {
-    console.log('notification permission state has changed to ', this.state);
-  };
-});

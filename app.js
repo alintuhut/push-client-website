@@ -38,6 +38,13 @@ const askForPermissionToReceiveNotifications = async () => {
     const messaging = firebase.messaging();
     const permission = await Notification.requestPermission();
 
+    navigator.permissions.query({name:'notifications'}).then(function(permissionStatus) {
+      console.log('notifications permission state is ', permissionStatus.state);
+      permissionStatus.onchange = function() {
+        console.log('notifications permission state has changed to ', this.state);
+      };
+    });
+
     console.log('Event notification prompt', permission);
 
     const token = await messaging.getToken();
