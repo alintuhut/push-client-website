@@ -50,22 +50,6 @@ const askForPermissionToReceiveNotifications = async () => {
     const token = await messaging.getToken();
     console.log('token is:', token);
 
-    // messaging.onMessage(payload => {
-    //   console.log('Message received. ', payload);
-    //   navigator.serviceWorker.ready.then(registration => {
-    //     showLocalNotification('hello', payload.data.message, registration);
-    //   });
-    // });
-
-    messaging.onTokenRefresh(() => {
-      try {
-        const refreshedToken = messaging.getToken();
-        console.log('Token refreshed.', refreshedToken);
-      } catch (error) {
-        console.log('Unable to retrieve refreshed token ', error);
-      }
-    });
-
     return token;
   } catch (error) {
     console.error(error);
@@ -83,6 +67,23 @@ const registerServiceWorker = async () => {
     messaging.usePublicVapidKey(
       'BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8'
     );
+
+    messaging.onMessage(payload => {
+      console.log('Message received. ', payload);
+      navigator.serviceWorker.ready.then(registration => {
+        showLocalNotification('hello', payload.data.message, registration);
+      });
+    });
+
+    messaging.onTokenRefresh(() => {
+      try {
+        const refreshedToken = messaging.getToken();
+        console.log('Token refreshed.', refreshedToken);
+      } catch (error) {
+        console.log('Unable to retrieve refreshed token ', error);
+      }
+    });
+
   } catch (error) {
     console.error('Unable to register service worker.', error);
   }
@@ -112,7 +113,9 @@ const check = () => {
     // You have subscription.
     // Send data to service worker
     const messageChannel = new MessageChannel();
-    navigator.serviceWorker.controller.postMessage('hello from app.js', [messageChannel.port2]);
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage('hello from app.js', [messageChannel.port2]);
+    }
 
   })
 };
