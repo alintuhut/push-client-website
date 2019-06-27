@@ -10,11 +10,6 @@ function loadScript(url) {
   });
 }
 
-async function loadDependencies() {
-  await loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js');
-  await loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-messaging.js');
-}
-
 loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js');
 loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-messaging.js');
 
@@ -92,7 +87,8 @@ const askForPermission = async () => {
 }
 
 const init = async () => {
-  await loadDependencies();
+  await loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js');
+  await loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-messaging.js');
   initializeFirebase();
 }
 
