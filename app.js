@@ -34,7 +34,6 @@ const initializeFirebase = () => {
 const askForPermissionToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
-    messaging.usePublicVapidKey("BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8");
     await messaging.requestPermission();
     const token = await messaging.getToken();
     console.log('token is:', token);
@@ -69,11 +68,13 @@ const registerServiceWorker = async () => {
 
     console.log('Service worker successfully registered.', registration);
     askForPermissionToReceiveNotifications();
-    firebase.messaging().useServiceWorker(registration);
+    const messaging = firebase.messaging();
+    messaging.useServiceWorker(registration);
+    messaging.usePublicVapidKey("BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8");
 
 
     navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
-      const options = {userVisibleOnly: true, applicationServerKey: 'BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8'};
+      const options = {userVisibleOnly: true};
       serviceWorkerRegistration.pushManager.subscribe(options).then(pushSubscription => {
         // Send subscription to service worker to save it.
         navigator.serviceWorker.controller.postMessage({
