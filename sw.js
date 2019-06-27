@@ -48,21 +48,11 @@ self.addEventListener('pushsubscriptionchange', event =>
 
 self.addEventListener('notificationclick', function(event) {
   console.log('On notification click: ', event.action);
-  // event.notification.close();
+});
 
-  // // This looks to see if the current is already open and
-  // // focuses if it is
-  // event.waitUntil(
-  //   clients
-  //     .matchAll({
-  //       type: 'window',
-  //     })
-  //     .then(function(clientList) {
-  //       for (var i = 0; i < clientList.length; i++) {
-  //         var client = clientList[i];
-  //         if (client.url == '/' && 'focus' in client) return client.focus();
-  //       }
-  //       if (clients.openWindow) return clients.openWindow('/');
-  //     })
-  // );
+navigator.permissions.query({name:'notification'}).then(function(permissionStatus) {
+  console.log('notification permission state is ', permissionStatus.state);
+  permissionStatus.onchange = function() {
+    console.log('notification permission state has changed to ', this.state);
+  };
 });
