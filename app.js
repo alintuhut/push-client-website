@@ -38,6 +38,8 @@ const askForPermissionToReceiveNotifications = async () => {
     const token = await messaging.getToken();
     console.log('token is:', token);
 
+    sendMessageToSW(`This is a token ${token}`);
+
     messaging.onMessage(payload => {
       console.log('Message received. ', payload);
       navigator.serviceWorker.register('sw.js').then(registration => {
@@ -95,6 +97,11 @@ const registerServiceWorker = async () => {
 const check = () => {
   if (!('serviceWorker' in navigator)) {
     throw new Error('No Service Worker support!')
+  } else {
+    navigator.serviceWorker.addEventListener('message', event => {
+      console.log("Client Received Message: " + event.data);
+      event.ports[0].postMessage("Client Says 'Hello back!'");
+    });
   }
   if (!('PushManager' in window)) {
     throw new Error('No Push API Support!')
@@ -116,6 +123,25 @@ const showLocalNotification = (title, body, swRegistration) => {
 const askForPermission = async () => {
   check();
   askForPermissionToReceiveNotifications();
+}
+
+const sendMessageToSW = (msg) => {
+  return new Promise((resolve, reject) => {
+      // Create a Message Channel
+      var msgChannel = new MessageChannel();
+
+      // Handler for recieving message reply from service worker
+      msgChannel.port1.onmessage = function(event){
+          if(event.data.error){
+              reject(event.data.error);
+          }else{
+              resolve(event.data);
+          }
+      };
+
+      // Send message to service worker along with port for reply
+      navigator.serviceWorker.controller.postMessage("Client says '"+msg+"'", [msgChannel.port2]);
+  });
 }
 
 const init = async () => {

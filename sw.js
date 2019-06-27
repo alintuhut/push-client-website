@@ -40,3 +40,34 @@ const handlePush = async (event) => {
 
 self.addEventListener('pushsubscriptionchange', (event) =>
                       event.waitUntil(handlePush(event)));
+
+self.addEventListener('message', function(event){
+  console.log("SW Received Message: " + event.data);
+});
+
+function sendMessageToClient(client, msg){
+  return new Promise((resolve, reject) => {
+      var msgChannel = new MessageChannel();
+
+      msgChannel.port1.onmessage = function(event){
+          if(event.data.error){
+              reject(event.data.error);
+          }else{
+              resolve(event.data);
+          }
+      };
+
+      client.postMessage("SW Says: '"+msg+"'", [msgChannel.port2]);
+  });
+}
+
+function sendMessageToAllClients(msg){
+  clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        sendMessageToClient(client, msg).then(m => console.log("SW Received Message: "+m));
+      })
+  })
+}
+
+
+sendMessageToAllClients('hello from sw');
