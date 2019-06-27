@@ -97,3 +97,5 @@ const init = async () => {
   await loadDependencies();
   initializeFirebase();
 }
+
+init();
