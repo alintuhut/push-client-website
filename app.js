@@ -68,7 +68,7 @@ const registerServiceWorker = async () => {
     const registration = await navigator.serviceWorker.register('sw.js');
 
     console.log('Service worker successfully registered.', registration);
-
+    askForPermissionToReceiveNotifications();
     firebase.messaging().useServiceWorker(registration);
   } catch (error) {
     console.error('Unable to register service worker.', error);
