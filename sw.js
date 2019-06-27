@@ -2,13 +2,13 @@ importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBAR5OWsAsKpDGdv5Pkupaw9J40bS5OY5w",
-  authDomain: "push-client-website.firebaseapp.com",
-  databaseURL: "https://push-client-website.firebaseio.com",
-  projectId: "push-client-website",
-  storageBucket: "",
-  messagingSenderId: "893328877473",
-  appId: "1:893328877473:web:9432a642dced1ef2"
+  apiKey: 'AIzaSyBAR5OWsAsKpDGdv5Pkupaw9J40bS5OY5w',
+  authDomain: 'push-client-website.firebaseapp.com',
+  databaseURL: 'https://push-client-website.firebaseio.com',
+  projectId: 'push-client-website',
+  storageBucket: '',
+  messagingSenderId: '893328877473',
+  appId: '1:893328877473:web:9432a642dced1ef2',
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -20,29 +20,49 @@ self.onmessage = function(e) {
   channel.postMessage(`hello from sw ${e.data}`);
 };
 
-
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
   // Customize notification here
   const notificationTitle = 'Background Message Title';
   const notificationOptions = {
     body: payload.data.message,
-    "tag": "request",
-    "actions": [
-      { "action": "yes", "title": "Yes" },
-      { "action": "no", "title": "No" }
-    ]
+    tag: 'request',
+    actions: [{ action: 'yes', title: 'Yes' }, { action: 'no', title: 'No' }],
   };
 
-  return self.registration.showNotification(notificationTitle,
-      notificationOptions);
+  return self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  );
 });
 
-const handlePush = async (event) => {
+const handlePush = async event => {
   await setTimeout(() => {
     console.log('subscription', event);
-  },1000);
-}
+  }, 1000);
+};
 
-self.addEventListener('pushsubscriptionchange', (event) =>
-                      event.waitUntil(handlePush(event)));
+self.addEventListener('pushsubscriptionchange', event =>
+  event.waitUntil(handlePush(event))
+);
+
+self.addEventListener('notificationclick', function(event) {
+  console.log('On notification click: ', event.notification);
+  // event.notification.close();
+
+  // // This looks to see if the current is already open and
+  // // focuses if it is
+  // event.waitUntil(
+  //   clients
+  //     .matchAll({
+  //       type: 'window',
+  //     })
+  //     .then(function(clientList) {
+  //       for (var i = 0; i < clientList.length; i++) {
+  //         var client = clientList[i];
+  //         if (client.url == '/' && 'focus' in client) return client.focus();
+  //       }
+  //       if (clients.openWindow) return clients.openWindow('/');
+  //     })
+  // );
+});
