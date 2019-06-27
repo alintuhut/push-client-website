@@ -52,7 +52,7 @@ const askForPermissionToReceiveNotifications = async () => {
 
     messaging.onMessage(payload => {
       console.log('Message received. ', payload);
-      navigator.serviceWorker.register('sw.js').then(registration => {
+      navigator.serviceWorker.ready().then(registration => {
         showLocalNotification('hello', payload.data.message, registration);
       });
     });
