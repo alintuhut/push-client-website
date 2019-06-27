@@ -36,7 +36,10 @@ const initializeFirebase = () => {
 const askForPermissionToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
-    await messaging.requestPermission();
+    const permission = await messaging.requestPermission();
+
+    console.log('Event notification prompt', permission);
+
     const token = await messaging.getToken();
     console.log('token is:', token);
 
