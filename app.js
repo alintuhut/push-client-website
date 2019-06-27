@@ -73,7 +73,7 @@ const registerServiceWorker = async () => {
 
 
     navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
-      const options = {userVisibleOnly: true, applicationServerKey: applicationServerKey};
+      const options = {userVisibleOnly: true, applicationServerKey: 'BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8'};
       serviceWorkerRegistration.pushManager.subscribe(options).then(pushSubscription => {
         // Send subscription to service worker to save it.
         navigator.serviceWorker.controller.postMessage({
