@@ -33,7 +33,9 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 const handlePush = async (event) => {
-  console.log('subscription', event)
+  await setTimeout(() => {
+    console.log('subscription', event);
+  },1000);
 }
 
 self.addEventListener('pushsubscriptionchange', (event) =>
