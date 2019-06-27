@@ -10,11 +10,9 @@ function loadScript(url) {
   });
 }
 
-function loadDependencies() {
-  return Promise.all([
-    loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js'),
-    loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-messaging.js')
-  ]);
+async function loadDependencies() {
+  await loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js');
+  await loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-messaging.js');
 }
 
 loadScript('https://www.gstatic.com/firebasejs/6.2.3/firebase-app.js');
