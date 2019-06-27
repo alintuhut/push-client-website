@@ -47,12 +47,13 @@ const askForPermissionToReceiveNotifications = async () => {
     });
 
     messaging.onTokenRefresh(() => {
-      messaging.getToken().then((refreshedToken) => {
+      try {
+        const refreshedToken = messaging.getToken();
         console.log('Token refreshed.', refreshedToken);
-      }).catch((err) => {
-        console.log('Unable to retrieve refreshed token ', err);
-        showToken('Unable to retrieve refreshed token ', err);
-      });
+      } catch (error) {
+        console.log('Unable to retrieve refreshed token ', error);
+      }
+
     });
 
     return token;
