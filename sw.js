@@ -32,6 +32,9 @@ messaging.setBackgroundMessageHandler(function(payload) {
       notificationOptions);
 });
 
-self.addEventListener('pushsubscriptionchange', function() {
-  console.log('actiune push change');
-});
+const handlePush = async (event) => {
+  console.log('subscription', event)
+}
+
+self.addEventListener('pushsubscriptionchange', (event) =>
+                      event.waitUntil(handlePush(event)));

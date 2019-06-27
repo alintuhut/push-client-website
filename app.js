@@ -41,7 +41,8 @@ const askForPermissionToReceiveNotifications = async () => {
 
     messaging.onMessage(payload => {
       console.log('Message received. ', payload);
-      showLocalNotification('hello', payload.data.message, self.registration)
+      const registration = await navigator.serviceWorker.register('sw.js');
+      showLocalNotification('hello', payload.data.message, registration)
     });
 
     return token;
