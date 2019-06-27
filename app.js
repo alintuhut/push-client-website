@@ -50,12 +50,12 @@ const askForPermissionToReceiveNotifications = async () => {
     const token = await messaging.getToken();
     console.log('token is:', token);
 
-    messaging.onMessage(payload => {
-      console.log('Message received. ', payload);
-      navigator.serviceWorker.ready.then(registration => {
-        showLocalNotification('hello', payload.data.message, registration);
-      });
-    });
+    // messaging.onMessage(payload => {
+    //   console.log('Message received. ', payload);
+    //   navigator.serviceWorker.ready.then(registration => {
+    //     showLocalNotification('hello', payload.data.message, registration);
+    //   });
+    // });
 
     messaging.onTokenRefresh(() => {
       try {
