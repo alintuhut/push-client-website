@@ -47,7 +47,7 @@ self.addEventListener('pushsubscriptionchange', event =>
 );
 
 self.addEventListener('notificationclick', function(event) {
-  console.log('On notification click: ', event.notification);
+  console.log('On notification click: ', event.action);
   // event.notification.close();
 
   // // This looks to see if the current is already open and
