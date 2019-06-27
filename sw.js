@@ -27,10 +27,6 @@ messaging.setBackgroundMessageHandler(function(payload) {
       notificationOptions);
 });
 
-self.onpushsubscriptionchange = event => {
-  event.waitUntil(swRegistration.pushManager.subscribe(event.oldSubscription.options)
-    .then(subscription => {
-      console.log('delogare');
-    })
-  )
-}
+self.addEventListener('pushsubscriptionchange', function() {
+  console.log('actiune push change');
+});
