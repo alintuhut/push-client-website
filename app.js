@@ -70,7 +70,6 @@ const registerServiceWorker = async () => {
     console.log('Service worker successfully registered.', registration);
 
     firebase.messaging().useServiceWorker(registration);
-    askForPermissionToReceiveNotifications();
   } catch (error) {
     console.error('Unable to register service worker.', error);
   }
@@ -99,12 +98,13 @@ const showLocalNotification = (title, body, swRegistration) => {
 
 const askForPermission = async () => {
   check();
-  registerServiceWorker();
+  askForPermissionToReceiveNotifications();
 }
 
 const init = async () => {
   await loadDependencies();
   initializeFirebase();
+  registerServiceWorker();
 }
 
 init();
