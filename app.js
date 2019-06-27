@@ -70,6 +70,22 @@ const registerServiceWorker = async () => {
     console.log('Service worker successfully registered.', registration);
     askForPermissionToReceiveNotifications();
     firebase.messaging().useServiceWorker(registration);
+
+
+    navigator.serviceWorker.ready.then(serviceWorkerRegistration => {
+      const options = {userVisibleOnly: true, applicationServerKey: applicationServerKey};
+      serviceWorkerRegistration.pushManager.subscribe(options).then(pushSubscription => {
+        // Send subscription to service worker to save it.
+        navigator.serviceWorker.controller.postMessage({
+          action: 'REQUEST_SUBSCRIPTION',
+          subscription: pushSubscription
+        });
+        // Upload first subscription to server using userId or any identifier
+        // to match user.
+        console.log('subscription app.js ', pushSubscription);
+      });
+    });
+
   } catch (error) {
     console.error('Unable to register service worker.', error);
   }
