@@ -135,7 +135,7 @@ const App = (function() {
 
   return {
 
-    init() {
+    init = async () => {
       await loadDependencies();
       initializeFirebase();
       registerServiceWorker();
