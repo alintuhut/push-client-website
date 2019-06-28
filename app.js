@@ -58,12 +58,12 @@ const askForPermissionToReceiveNotifications = async () => {
 
 const registerServiceWorker = async () => {
   try {
-    const registration = await navigator.serviceWorker.register('sw.js');
+    //const registration = await navigator.serviceWorker.register('sw.js');
 
     console.log('Service worker successfully registered.', registration);
     askForPermissionToReceiveNotifications();
     const messaging = firebase.messaging();
-    messaging.useServiceWorker(registration);
+    //messaging.useServiceWorker(registration);
     messaging.usePublicVapidKey(
       'BCPI-kjlPHSPpzH15AsX0YXwkHTp6lYK20W51TG1LTdJTJ_xnyr70fRBqNZFTaai8_6NkUqB8jkYed9ZX1mu0C8'
     );
