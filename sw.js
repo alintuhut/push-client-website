@@ -31,11 +31,12 @@ self.onmessage = function(e) {
 
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
-
-  return showNotification(payload.notification.title,  payload.notification);
+  if (payload.notification) {
+    return showNotification(payload.notification.title,  payload.notification);
+  }
 });
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   console.log('Notification action', event);
 
   const postDataBody = {
@@ -49,6 +50,8 @@ self.addEventListener('notificationclick', function(event) {
   postRequest(API_ENDPOINT, postDataBody).then(response => {
     console.log('Response', response);
   });
+
+  event.notification.close();
 });
 
 function postRequest(url, data) {
@@ -61,38 +64,6 @@ function postRequest(url, data) {
   }).then(response => response.json())
 }
 
-self.addEventListener('fetch', function(event) {
-  console.log('Fetch event:', event);
-});
-
-/*
-* Overrides push notification data, to avoid having 'notification' key and firebase blocking
-* the message handler from being called
-*/
-self.addEventListener('push', function (e) {
-  // Skip if event is our own custom event
-  if (e.custom) return;
-
-  // Create a new event to dispatch
-  var newEvent = new Event('push');
-  newEvent.waitUntil = e.waitUntil.bind(e);
-  newEvent.data = {
-     json: function() {
-         var newData = e.data.json();
-         newData._notification = newData.notification;
-         delete newData.notification;
-         return newData;
-     },
-  };
-  newEvent.custom = true;
-
-  // Stop event propagation
-  e.stopImmediatePropagation();
-
-  // Dispatch the new wrapped event
-  dispatchEvent(newEvent);
-});
-
 function showNotification(title, options) {
   const postDataBody = {
     app_id: 1,
@@ -101,6 +72,6 @@ function showNotification(title, options) {
     ua: navigator.userAgent,
     lang: navigator.language
   };
-  postRequest(API_ENDPOINT, postDataBody)
+  postRequest(API_ENDPOINT, postDataBody);
   return self.registration.showNotification(title,  options);
 }
