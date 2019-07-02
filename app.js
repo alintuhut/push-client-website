@@ -162,12 +162,8 @@ function postMessageToSW(message) {
       }
       // You have subscription.
       // Send data to service worker
-      const messageChannel = new MessageChannel();
       if (navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage(
-              message,
-              [messageChannel.port2]
-          );
+          navigator.serviceWorker.controller.postMessage(message);
       }
   });
 }

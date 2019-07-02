@@ -35,7 +35,8 @@ const messaging = firebase.messaging();
 
 const API_ENDPOINT = 'https://app.movalio.com/api/event';
 
-self.onmessage = function(e) {
+// in sw.js
+self.addEventListener('message', event => {
   switch(e.data.action) {
     case 'show-notification':
       console.log('Show notification', e.data);
@@ -43,9 +44,13 @@ self.onmessage = function(e) {
         return showNotification(e.data.notification.title, e.data.notification);
       }
   }
-  // const channel = new BroadcastChannel('app-channel');
-  // channel.postMessage(`hello from sw ${e.data}`);
-};
+});
+
+// self.onmessage = function(e) {
+
+//   // const channel = new BroadcastChannel('app-channel');
+//   // channel.postMessage(`hello from sw ${e.data}`);
+// };
 
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
