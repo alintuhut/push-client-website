@@ -37,12 +37,12 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  fetch('https://app.movalio.com', {
+  fetch('http://app.movalio.com/api/event', {
     method: 'post',
     headers: {
       "Content-type": "application/json"
     },
-    body: {action: 'notification:click', app_id: '4455', token: '123123' },
+    body: {action: 'notification:click', app_id: '4455', token: '123123', data: {} },
     credentials: 'include'
   })
   .then(function (data) {
