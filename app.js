@@ -169,12 +169,10 @@ const askForPermission = async () => {
 function postRequest(url, data) {
   return fetch(url, {
     credentials: 'include', // 'include', default: 'omit'
-    mode: 'no-cors',
     method: 'POST', // 'GET', 'PUT', 'DELETE', etc.
     body: JSON.stringify(data), // Coordinate the body type with 'Content-Type'
     headers: new Headers({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+      'Content-Type': 'application/json'
     }),
   }).then(response => response.json())
 }
