@@ -9,9 +9,9 @@ self.addEventListener('notificationclick', function (event) {
     lang: navigator.language
   };
 
-  postRequest(API_ENDPOINT, postDataBody).then(response => {
-    console.log('Response', response);
-  });
+  // postRequest(API_ENDPOINT, postDataBody).then(response => {
+  //   console.log('Response', response);
+  // });
 
   event.notification.close();
 });
