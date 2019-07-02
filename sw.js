@@ -37,19 +37,19 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  fetch('https://app.movalio.com/api/event', {
-    method: 'post',
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: {action: 'notification:click', app_id: '4455', token: '123123', data: {} },
-    credentials: 'include'
-  })
-  .then(function (data) {
-    console.log('Request succeeded with JSON response', data);
-  })
-  .catch(function (error) {
-    console.log('Request failed', error);
-  });
-  //postData('https://app.movalio.com', {action: 'notification:click', app_id: '4455', token: '123123' });
+  //postRequest('https://app.movalio.com', {action: 'notification:click', app_id: '4455', token: '123123' });
+});
+
+function postRequest(url, data) {
+  return fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    }),
+  }).then(response => response.json())
+}
+
+self.addEventListener('fetch', function(event) {
+  console.log('Fetch event:', event);
 });

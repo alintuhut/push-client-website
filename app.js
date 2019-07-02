@@ -168,9 +168,8 @@ const askForPermission = async () => {
 
 function postRequest(url, data) {
   return fetch(url, {
-    credentials: 'omit', // 'include', default: 'omit'
-    method: 'POST', // 'GET', 'PUT', 'DELETE', etc.
-    body: JSON.stringify(data), // Coordinate the body type with 'Content-Type'
+    method: 'POST',
+    body: JSON.stringify(data),
     headers: new Headers({
       'Content-Type': 'application/json'
     }),
