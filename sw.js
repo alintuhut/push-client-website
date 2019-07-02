@@ -37,6 +37,7 @@ const API_ENDPOINT = 'https://app.movalio.com/api/event';
 
 // in sw.js
 self.addEventListener('message', e => {
+  console.log('Receive post message in SW');
   switch(e.data.action) {
     case 'show-notification':
       console.log('Show notification', e.data);
@@ -45,12 +46,6 @@ self.addEventListener('message', e => {
       }
   }
 });
-
-// self.onmessage = function(e) {
-
-//   // const channel = new BroadcastChannel('app-channel');
-//   // channel.postMessage(`hello from sw ${e.data}`);
-// };
 
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);

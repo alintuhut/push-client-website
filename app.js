@@ -78,6 +78,9 @@ const registerServiceWorker = async () => {
 
       messaging.onMessage(payload => {
           console.log('Message received. ', payload);
+
+          console.log('Sending post message');
+
           postMessageToSW({action: 'show-notification', ...payload});
       });
 
