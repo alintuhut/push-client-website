@@ -53,7 +53,7 @@ const askForPermissionToReceiveNotifications = async () => {
         lang: navigator.language
       };
 
-      const response = await postData('https://app.movalio.com/api/event', JSON.stringify(postDataBody));
+      const response = await postRequest('https://app.movalio.com/api/event', postDataBody);
 
       console.log('Post response', response);
 
@@ -166,20 +166,15 @@ const askForPermission = async () => {
   askForPermissionToReceiveNotifications();
 };
 
-const postData = async (url, body) => {
-  try {
-    return await fetch(url, {
-      method: 'post',
-      mode: 'no-cors',
-      headers: {
-        "Content-type": "application/json"
-      },
-      body,
-      credentials: 'include'
-    })
-  } catch (error) {
-    console.log('Request failed', error);
-  }
+function postRequest(url, data) {
+  return fetch(url, {
+    credentials: 'same-origin', // 'include', default: 'omit'
+    method: 'POST', // 'GET', 'PUT', 'DELETE', etc.
+    body: JSON.stringify(data), // Coordinate the body type with 'Content-Type'
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    }),
+  }).then(response => response.json())
 }
 
 const init = async () => {
