@@ -36,7 +36,7 @@ const messaging = firebase.messaging();
 const API_ENDPOINT = 'https://app.movalio.com/api/event';
 
 // in sw.js
-self.addEventListener('message', event => {
+self.addEventListener('message', e => {
   switch(e.data.action) {
     case 'show-notification':
       console.log('Show notification', e.data);
