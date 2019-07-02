@@ -37,7 +37,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  fetch('http://app.movalio.com/api/event', {
+  fetch('https://app.movalio.com/api/event', {
     method: 'post',
     headers: {
       "Content-type": "application/json"
