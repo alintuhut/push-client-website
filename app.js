@@ -170,7 +170,7 @@ const postData = async (url, body) => {
   try {
     return await fetch(url, {
       method: 'post',
-      mode: 'cors',
+      mode: 'no-cors',
       headers: {
         "Content-type": "application/json"
       },
