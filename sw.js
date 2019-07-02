@@ -37,31 +37,19 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  postData('https://app.movalio.com', {action: 'notification:click', app_id: '4455', token: '123123' });
+  fetch('https://app.movalio.com', {
+    method: 'post',
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: {action: 'notification:click', app_id: '4455', token: '123123' },
+    credentials: 'include'
+  })
+  .then(function (data) {
+    console.log('Request succeeded with JSON response', data);
+  })
+  .catch(function (error) {
+    console.log('Request failed', error);
+  });
+  //postData('https://app.movalio.com', {action: 'notification:click', app_id: '4455', token: '123123' });
 });
-
-// Set up our HTTP request
-var xhr = new XMLHttpRequest();
-
-// Setup our listener to process completed requests
-xhr.onload = function () {
-
-	// Process our return data
-	if (xhr.status >= 200 && xhr.status < 300) {
-		// This will run when the request is successful
-		console.log('success!', xhr);
-	} else {
-		// This will run when it's not
-		console.log('The request failed!');
-	}
-
-	// This will run either way
-	// All three of these are optional, depending on what you're trying to do
-	console.log('This always runs...');
-};
-
-const postData = (url, body) => {
-  xhr.open('POST', ur);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(body);
-};
