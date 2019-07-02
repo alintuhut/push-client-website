@@ -37,7 +37,19 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  //postRequest('https://app.movalio.com', {action: 'notification:click', app_id: '4455', token: '123123' });
+  console.log('Notification action', event);
+
+  const postDataBody = {
+    app_id: 1,
+    action: 'notification',
+    //token,
+    ua: navigator.userAgent,
+    lang: navigator.language
+  };
+
+  postRequest('https://app.movalio.com/api/event', postDataBody).then(response => {
+    console.log('Response', response);
+  });
 });
 
 function postRequest(url, data) {
@@ -52,4 +64,32 @@ function postRequest(url, data) {
 
 self.addEventListener('fetch', function(event) {
   console.log('Fetch event:', event);
+});
+
+/*
+* Overrides push notification data, to avoid having 'notification' key and firebase blocking
+* the message handler from being called
+*/
+self.addEventListener('push', function (e) {
+  // Skip if event is our own custom event
+  if (e.custom) return;
+
+  // Create a new event to dispatch
+  var newEvent = new Event('push');
+  newEvent.waitUntil = e.waitUntil.bind(e);
+  newEvent.data = {
+     json: function() {
+         var newData = e.data.json();
+         newData._notification = newData.notification;
+         delete newData.notification;
+         return newData;
+     },
+  };
+  newEvent.custom = true;
+
+  // Stop event propagation
+  e.stopImmediatePropagation();
+
+  // Dispatch the new wrapped event
+  dispatchEvent(newEvent);
 });
