@@ -15,11 +15,15 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
+const API_ENDPOINT = 'https://app.movalio.com/api/event';
+
 self.onmessage = function(e) {
   switch(e.data.action) {
     case 'show-notification':
       console.log('Show notification', e.data);
-      return self.registration.showNotification(e.data.notification.title,  e.data.notification);
+      if (e.data.notification) {
+        return showNotification(e.data.notification.title, e.data.notification);
+      }
   }
   // const channel = new BroadcastChannel('app-channel');
   // channel.postMessage(`hello from sw ${e.data}`);
@@ -28,7 +32,7 @@ self.onmessage = function(e) {
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
 
-  return self.registration.showNotification(payload.notification.title,  payload.notification);
+  return showNotification(payload.notification.title,  payload.notification);
 });
 
 self.addEventListener('notificationclick', function(event) {
@@ -42,7 +46,7 @@ self.addEventListener('notificationclick', function(event) {
     lang: navigator.language
   };
 
-  postRequest('https://app.movalio.com/api/event', postDataBody).then(response => {
+  postRequest(API_ENDPOINT, postDataBody).then(response => {
     console.log('Response', response);
   });
 });
@@ -88,3 +92,15 @@ self.addEventListener('push', function (e) {
   // Dispatch the new wrapped event
   dispatchEvent(newEvent);
 });
+
+function showNotification(title, options) {
+  const postDataBody = {
+    app_id: 1,
+    action: 'notification:show',
+    //token,
+    ua: navigator.userAgent,
+    lang: navigator.language
+  };
+  postRequest(API_ENDPOINT, postDataBody)
+  return self.registration.showNotification(title,  options);
+}
