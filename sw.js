@@ -74,9 +74,10 @@ function showNotification(title, options) {
     app_id: 1,
     action: 'notification:show',
     //token,
+    uuid: '',
     ua: navigator.userAgent,
     lang: navigator.language
   };
-  postRequest(API_ENDPOINT, postDataBody);
+  //postRequest(API_ENDPOINT, postDataBody);
   return self.registration.showNotification(title,  options);
 }
