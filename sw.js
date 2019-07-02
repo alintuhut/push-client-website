@@ -1,3 +1,21 @@
+self.addEventListener('notificationclick', function (event) {
+  console.log('Notification action', event);
+
+  const postDataBody = {
+    app_id: 1,
+    action: 'notification',
+    //token,
+    ua: navigator.userAgent,
+    lang: navigator.language
+  };
+
+  postRequest(API_ENDPOINT, postDataBody).then(response => {
+    console.log('Response', response);
+  });
+
+  event.notification.close();
+});
+
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
 
@@ -36,22 +54,9 @@ messaging.setBackgroundMessageHandler(function(payload) {
   }
 });
 
-self.addEventListener('notificationclick', function (event) {
-  console.log('Notification action', event);
-
-  const postDataBody = {
-    app_id: 1,
-    action: 'notification',
-    //token,
-    ua: navigator.userAgent,
-    lang: navigator.language
-  };
-
-  postRequest(API_ENDPOINT, postDataBody).then(response => {
-    console.log('Response', response);
-  });
-
-  event.notification.close();
+self.addEventListener("notificationclose", function(event) {
+  console.log('notification close', event);
+  // log send to server
 });
 
 function postRequest(url, data) {
