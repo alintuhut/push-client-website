@@ -37,7 +37,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
 });
 
 self.addEventListener('notificationclick', function(event) {
-  postData('http://app.movalio.com', {action: 'notification:click', app_id: '4455', data: { token: '123123' }})
+  postData('https://app.movalio.com', {action: 'notification:click', app_id: '4455', token: '123123' })
   .then(data => console.log(JSON.stringify(data))) // JSON-string from `response.json()` call
   .catch(error => console.error(error));
 });
