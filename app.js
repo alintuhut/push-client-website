@@ -78,13 +78,7 @@ const registerServiceWorker = async () => {
 
       messaging.onMessage(payload => {
           console.log('Message received. ', payload);
-          navigator.serviceWorker.ready.then(registration => {
-              showLocalNotification(
-                  'hello',
-                  payload.data.message,
-                  registration
-              );
-          });
+          postMessageToSW({action: 'show-notification', data: payload.data});
       });
 
       messaging.onTokenRefresh(() => {
@@ -127,26 +121,6 @@ const check = () => {
   channel.onmessage = function(e) {
       console.log('In app.js:', e.data);
   };
-
-  navigator.serviceWorker.ready
-      .then(function(serviceWorkerRegistration) {
-          // Let's see if you have a subscription already
-          return serviceWorkerRegistration.pushManager.getSubscription();
-      })
-      .then(function(subscription) {
-          if (!subscription) {
-              // You do not have subscription
-          }
-          // You have subscription.
-          // Send data to service worker
-          const messageChannel = new MessageChannel();
-          if (navigator.serviceWorker.controller) {
-              navigator.serviceWorker.controller.postMessage(
-                  'hello from app.js',
-                  [messageChannel.port2]
-              );
-          }
-      });
 };
 
 const showLocalNotification = (title, body, swRegistration) => {
@@ -174,6 +148,28 @@ function postRequest(url, data) {
       'Content-Type': 'application/json'
     }),
   }).then(response => response.json())
+}
+
+function postMessageToSW(message) {
+  navigator.serviceWorker.ready
+  .then(function(serviceWorkerRegistration) {
+      // Let's see if you have a subscription already
+      return serviceWorkerRegistration.pushManager.getSubscription();
+  })
+  .then(function(subscription) {
+      if (!subscription) {
+          // You do not have subscription
+      }
+      // You have subscription.
+      // Send data to service worker
+      const messageChannel = new MessageChannel();
+      if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage(
+              message,
+              [messageChannel.port2]
+          );
+      }
+  });
 }
 
 const init = async () => {

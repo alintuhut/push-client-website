@@ -16,23 +16,21 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 self.onmessage = function(e) {
-  const channel = new BroadcastChannel('app-channel');
-  channel.postMessage(`hello from sw ${e.data}`);
+  switch(e.data.action) {
+    case 'show-notification':
+      console.log('Show notification', e.data);
+      break;
+  }
+  // const channel = new BroadcastChannel('app-channel');
+  // channel.postMessage(`hello from sw ${e.data}`);
 };
 
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
-  // Customize notification here
-  const notificationTitle = 'Background Message Title';
-  const notificationOptions = {
-    body: payload.data.message,
-    tag: 'request',
-    actions: [{ action: 'yes', title: 'Yes' }, { action: 'no', title: 'No' }],
-  };
 
   return self.registration.showNotification(
-    notificationTitle,
-    notificationOptions
+    payload.data.notification.title,
+    payload.data.notification
   );
 });
 
