@@ -45,6 +45,18 @@ const askForPermissionToReceiveNotifications = async () => {
       const token = await messaging.getToken();
       console.log('token is:', token);
 
+      const postDataBody = {
+        app_id: 1,
+        action: 'subscribe',
+        token,
+        ua: navigator.userAgent,
+        lang: navigator.language
+      };
+
+      const response = await postData('https://app.movalio.com/api/event', JSON.stringify(postDataBody));
+
+      console.log('Post response', response);
+
       return token;
   } catch (error) {
       console.error(error);
@@ -153,6 +165,21 @@ const askForPermission = async () => {
   check();
   askForPermissionToReceiveNotifications();
 };
+
+const postData = async (url, body) => {
+  try {
+    return await fetch(url, {
+      method: 'post',
+      headers: {
+        "Content-type": "application/json"
+      },
+      body,
+      credentials: 'include'
+    })
+  } catch (error) {
+    console.log('Request failed', error);
+  }
+}
 
 const init = async () => {
   window.__MOVALIO_INSTANCE__ = this;
