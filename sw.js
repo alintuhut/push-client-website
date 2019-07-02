@@ -19,7 +19,7 @@ self.onmessage = function(e) {
   switch(e.data.action) {
     case 'show-notification':
       console.log('Show notification', e.data);
-      break;
+      return self.registration.showNotification(e.data.notification.title,  e.data.notification);
   }
   // const channel = new BroadcastChannel('app-channel');
   // channel.postMessage(`hello from sw ${e.data}`);
@@ -28,10 +28,7 @@ self.onmessage = function(e) {
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('Received background message ', payload);
 
-  return self.registration.showNotification(
-    payload.data.notification.title,
-    payload.data.notification
-  );
+  return self.registration.showNotification(payload.notification.title,  payload.notification);
 });
 
 self.addEventListener('notificationclick', function(event) {
