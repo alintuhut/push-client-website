@@ -210,7 +210,7 @@ function storeData(data) {
 }
 
 function getData(key) {
-  let data = index.get(key);
+  let data = db.transaction("clients", "readwrite").objectStore("clients").get(key);
 
   data.onsuccess = function() {
     console.log(data.result);
