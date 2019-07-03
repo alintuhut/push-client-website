@@ -102,7 +102,7 @@ function createIndexedDB(name, version) {
     console.log('indexedDB success init');
     db = dbPromise.result;
     let tx = db.transaction('movalio', 'readwrite'),
-    store = tx.objectStore('clients'),
+    store = tx.objectStore('movalio'),
     index = store.index('token');
 
     db.onerror = function(e) {
@@ -116,7 +116,7 @@ function createIndexedDB(name, version) {
 
   dbPromise.onupgradeneeded = function(event) {
     let db = dbPromise.result,
-        store = db.createObjectStore('clients', { keyPath: 'token' }),
+        store = db.createObjectStore('movalio', { keyPath: 'token' }),
         index = store.createIndex('token', 'token', { unique: true });
   }
 }
