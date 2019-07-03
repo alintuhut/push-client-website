@@ -197,7 +197,16 @@ function createIndexedDB(name) {
 }
 
 function storeData(data) {
-  store.put(data);
+  var update = db.transaction("clients", "readwrite").objectStore("clients").put(data);
+
+  update.onerror = function (event) {
+      console.log(event);
+  }
+
+  update.onsuccess = function (event) {
+    console.log('SUCCESS to save in indexedDB');
+}
+  //store.put(data);
 }
 
 function getData(key) {
