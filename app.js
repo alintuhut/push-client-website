@@ -81,7 +81,7 @@ const registerServiceWorker = async () => {
 
           console.log('Sending post message');
 
-          postMessageToSW({action: 'show-notification', ...payload});
+          postMessageToSW(Object.assign({action: 'show-notification' }, payload));
       });
 
       messaging.onTokenRefresh(() => {
