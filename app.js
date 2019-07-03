@@ -45,17 +45,11 @@ const askForPermissionToReceiveNotifications = async () => {
       token = await messaging.getToken();
       console.log('token is:', token);
 
-      const postDataBody = {
-        app_id: 1,
-        action: 'subscribe',
-        token,
-        ua: navigator.userAgent,
-        lang: navigator.language
-      };
-
-      const uuid = await postRequest('https://app.movalio.com/api/event', postDataBody);
-
-      postMessageToSW({action: 'save-data', client: { uuid, app_id: window.app_id }, table: 'movalio' });
+      switch(permission) {
+        case 'grant':
+          postMessageToSW({ action: 'subscribe', body: { token, app_id, ua: navigator.userAgent, lang: navigator.language }});
+          break;
+      }
 
       return token;
   } catch (error) {

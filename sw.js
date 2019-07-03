@@ -35,7 +35,8 @@ const messaging = firebase.messaging();
 
 const API_ENDPOINT = 'https://app.movalio.com/api/event';
 
-let db;
+let db,
+    app_id;
 
 createIndexedDB('movalio', 1);
 
@@ -43,6 +44,12 @@ createIndexedDB('movalio', 1);
 self.addEventListener('message', e => {
   console.log('Receive post message in SW');
   switch(e.data.action) {
+    case 'subscribe':
+      app_id = e.data.body.app_id;
+      postRequest(API_ENDPOINT, e.data.body).then(response => {
+        storeData({ app_id, uuid: response });
+      });
+      break;
     case 'show-notification':
       console.log('Show notification', e.data);
       if (e.data.notification) {
