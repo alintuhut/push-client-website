@@ -185,7 +185,7 @@ function createIndexedDB(name) {
     }
 
     tx.oncomplete = function() {
-      db.close();
+      //db.close();
     }
   };
 
@@ -203,7 +203,7 @@ function storeData(data) {
       console.log(event);
   }
 
-  update.onsuccess = function (event) {
+  update.oncomplete  = function (event) {
     console.log('SUCCESS to save in indexedDB');
 }
   //store.put(data);
