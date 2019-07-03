@@ -48,7 +48,7 @@ self.addEventListener('message', e => {
   switch(e.data.action) {
     case 'subscribe':
       app_id = e.data.app_id;
-      postRequest(API_ENDPOINT, e.body).then(response => {
+      postRequest(API_ENDPOINT, e.data).then(response => {
         storeData({ app_id, uuid: response });
       }).catch(err => {
         console.log('ERROR', err);
