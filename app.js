@@ -53,9 +53,11 @@ const askForPermissionToReceiveNotifications = async () => {
         lang: navigator.language
       };
 
-      const response = await postRequest('https://app.movalio.com/api/event', postDataBody);
+      const uuid = await postRequest('https://app.movalio.com/api/event', postDataBody);
 
-      console.log('Post response', response);
+      const indexedDBMessage = await storeData('clients', {token, uuid});
+
+      console.log('indexedDB', indexedDBMessage);
 
       return token;
   } catch (error) {
@@ -119,11 +121,11 @@ const check = () => {
   if (!('PushManager' in window)) {
       throw new Error('No Push API Support!');
   }
-
-  const channel = new BroadcastChannel('app-channel');
-  channel.onmessage = function(e) {
-      console.log('In app.js:', e.data);
-  };
+  if (!('indexedDB' in window)) {
+    throw new Error('No indexedDB Support!');
+  } else {
+    createIndexedDB('web-pusher');
+  }
 };
 
 const showLocalNotification = (title, body, swRegistration) => {
@@ -136,11 +138,6 @@ const showLocalNotification = (title, body, swRegistration) => {
       ],
   };
   swRegistration.showNotification(title, options);
-};
-
-const askForPermission = async () => {
-  check();
-  askForPermissionToReceiveNotifications();
 };
 
 function postRequest(url, data) {
@@ -171,14 +168,57 @@ function postMessageToSW(message) {
   });
 }
 
+function createIndexedDB(name) {
+  dbPromise = idb.open(name, 1, function(upgradeDb) {
+    if (!upgradeDb.objectStoreNames.contains('clients')) {
+      var client = upgradeDb.createObjectStore('client', { keyPath: 'id', autoIncrement: true });
+      client.createIndex('token', 'token', {unique: true});
+      client.createIndex('uuid', 'uuid', {unique: true});
+    }
+  });
+}
+
+function storeData(table, data) {
+  return new Promise((resolve, reject) => {
+    dbPromise.then(function(db) {
+      var tx = db.transaction(table, 'readwrite');
+      var store = tx.objectStore(table);
+      store.add(data);
+      return tx.complete;
+    }).then(function() {
+      resolve({message: 'added item to the store os!'});
+      console.log('added item to the store os!');
+    });
+  })
+}
+
+function readData(table) {
+  dbPromise.then(function(db) {
+    var tx = db.transaction(table, 'readonly');
+    var store = tx.objectStore(table);
+    return store.get();
+  }).then(function(val) {
+    console.dir(val);
+  });
+}
+
+function initPostMessageListener() {
+  const channel = new BroadcastChannel('app-channel');
+  channel.onmessage = function(e) {
+      console.log('In app.js:', e.data);
+  };
+}
+
 const init = async () => {
   window.__MOVALIO_INSTANCE__ = this;
   await loadDependencies();
   initializeFirebase();
+  initPostMessageListener();
   check();
   registerServiceWorker();
 };
 
 let messaging = null;
+let dbPromise = null;
 
 init();
