@@ -169,27 +169,29 @@ function postMessageToSW(message) {
 }
 
 function createIndexedDB(name) {
-  dbPromise = indexedDB.open(name, 1, function(upgradeDb) {
-    if (!upgradeDb.objectStoreNames.contains('clients')) {
+  var dbPromise = indexedDB.open(name, 1);
+
+  dbPromise.onsuccess = function(event) {
+    console.log('indexedDB success init');
+    db = DBOpenRequest.result;
+    if (!db.objectStoreNames.contains('clients')) {
       var client = upgradeDb.createObjectStore('client', { keyPath: 'id', autoIncrement: true });
       client.createIndex('token', 'token', {unique: true});
       client.createIndex('uuid', 'uuid', {unique: true});
     }
-  });
+  };
 }
 
 function storeData(table, data) {
   return new Promise((resolve, reject) => {
-    dbPromise.then(function(db) {
-      var tx = db.transaction(table, 'readwrite');
-      var store = tx.objectStore(table);
-      store.add(data);
-      return tx.complete;
-    }).then(function() {
-      resolve({message: 'added item to the store os!'});
-      console.log('added item to the store os!');
-    });
-  })
+    var tx = db.transaction(table, 'readwrite');
+    var store = tx.objectStore(table);
+    store.add(data);
+    return tx.complete;
+  }).then(function() {
+    resolve({message: 'added item to the store os!'});
+    console.log('added item to the store os!');
+  });
 }
 
 function readData(table) {
@@ -219,6 +221,6 @@ const init = async () => {
 };
 
 let messaging = null;
-let dbPromise = null;
+let db = null;
 
 init();
