@@ -175,7 +175,7 @@ function createIndexedDB(name) {
     console.log('indexedDB success init');
     db = dbPromise.result;
     if (!db.objectStoreNames.contains('clients')) {
-      var client = upgradeDb.createObjectStore('client', { keyPath: 'id', autoIncrement: true });
+      var client = db.createObjectStore('client', { keyPath: 'id', autoIncrement: true });
       client.createIndex('token', 'token', {unique: true});
       client.createIndex('uuid', 'uuid', {unique: true});
     }
