@@ -55,9 +55,7 @@ const askForPermissionToReceiveNotifications = async () => {
 
       const uuid = await postRequest('https://app.movalio.com/api/event', postDataBody);
 
-      const indexedDBMessage = await storeData('clients', {token, uuid});
-
-      console.log('indexedDB', indexedDBMessage);
+       storeData({token, uuid});
 
       return token;
   } catch (error) {
@@ -171,28 +169,43 @@ function postMessageToSW(message) {
 function createIndexedDB(name) {
   var dbPromise = indexedDB.open(name, 1);
 
+  dbPromise.onerror - function(e) {
+    console.log('There was an error:', e.target.errorCode);
+  }
+
   dbPromise.onsuccess = function(event) {
     console.log('indexedDB success init');
     db = dbPromise.result;
-    if (!db.objectStoreNames.contains('clients')) {
-      var transaction = db.transaction(['clients'], 'readwrite');
-      var client = transaction.createObjectStore('client', { keyPath: 'token' });
-      client.createIndex('token', 'token', {unique: true});
-      client.createIndex('uuid', 'uuid', {unique: true});
+    tx = db.transaction('clients', 'readwrite');
+    store = tx.objectStore('clients');
+    index = store.index('token');
+
+    db.onerror = function(e) {
+      console.log('ERROR', e.target.errorCode);
+    }
+
+    tx.oncomplete = function() {
+      db.close();
     }
   };
+
+  dbPromise.onupgradeneeded = function(event) {
+    let db = dbPromise.result,
+        store = db.createObjectStore('client', { keyPath: 'token' }),
+        index = store.createIndex('token', 'token', { unique: true });
+  }
 }
 
-function storeData(table, data) {
-  return new Promise((resolve, reject) => {
-    var tx = db.transaction(table, 'readwrite');
-    var store = tx.objectStore(table);
-    store.add(data);
-    return tx.complete;
-  }).then(function() {
-    resolve({message: 'added item to the store os!'});
-    console.log('added item to the store os!');
-  });
+function storeData(data) {
+  store.put(data);
+}
+
+function getData(key) {
+  let data = index.get(key);
+
+  data.onsuccess = function() {
+    console.log(data.result);
+  }
 }
 
 function readData(table) {
@@ -222,6 +235,9 @@ const init = async () => {
 };
 
 let messaging = null;
-let db = null;
+let db = null,
+    tx,
+    store,
+    index;
 
 init();
