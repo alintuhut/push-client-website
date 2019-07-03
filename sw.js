@@ -56,7 +56,7 @@ self.addEventListener('message', e => {
 
     case 'get-data':
       postMessageToClients('BOSS');
-      getData('1', 'movalio');
+      getData(1, 'movalio');
       break;
   }
 });
