@@ -50,7 +50,7 @@ const askForPermissionToReceiveNotifications = async () => {
           postMessageToSW({ action: 'subscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
           break;
         case 'denied':
-            postMessageToSW({ action: 'unsubscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+            postMessageToSW({ action: 'unsubscribe', app_id, ua: navigator.userAgent, lang: navigator.language });
           break;
       }
 
@@ -93,7 +93,7 @@ const registerServiceWorker = async () => {
       navigator.permissions
           .query({ name: 'notifications' })
           .then(function(permissionStatus) {
-            switch(this.state) {
+            switch(permissionStatus.state) {
               case 'prompt':
                 token = messaging.getToken().then(token => {
                   postMessageToSW({ action: 'prompt:show', app_id, ua: navigator.userAgent, lang: navigator.language });
@@ -112,7 +112,7 @@ const registerServiceWorker = async () => {
                     });
                     break;
                   case 'denied':
-                      postMessageToSW({ action: 'unsubscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+                      postMessageToSW({ action: 'unsubscribe', app_id, ua: navigator.userAgent, lang: navigator.language });
                     break;
                 }
                   console.log(
