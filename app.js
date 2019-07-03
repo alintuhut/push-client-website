@@ -52,6 +52,9 @@ const askForPermissionToReceiveNotifications = async () => {
         case 'denied':
             postMessageToSW({ action: 'unsubscribe', app_id, ua: navigator.userAgent, lang: navigator.language });
           break;
+        case 'default':
+            postMessageToSW({ action: 'prompt:reject', app_id, ua: navigator.userAgent, lang: navigator.language });
+          break;
       }
 
       return token;

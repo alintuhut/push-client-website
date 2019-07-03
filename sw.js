@@ -63,7 +63,9 @@ self.addEventListener('message', e => {
       });
       break;
 
-    case 'prompt:show', 'prompt:accept', 'prompt:reject':
+    case 'prompt:show':
+    case 'prompt:accept':
+    case 'prompt:reject':
       postRequest(API_ENDPOINT, e.data).then(response => {
 
       }).catch(err => {
