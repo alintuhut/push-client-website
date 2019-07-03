@@ -42,7 +42,7 @@ const askForPermissionToReceiveNotifications = async () => {
 
       console.log('Event notification prompt', permission);
 
-      const token = await messaging.getToken();
+      token = await messaging.getToken();
       console.log('token is:', token);
 
       const postDataBody = {
@@ -203,7 +203,7 @@ function storeData(data) {
       console.log(event);
   }
 
-  update.oncomplete  = function (event) {
+  update.onsuccess  = function (event) {
     console.log('SUCCESS to save in indexedDB');
 }
   //store.put(data);
@@ -234,6 +234,10 @@ function initPostMessageListener() {
   };
 }
 
+function getStoreData() {
+  getData(token);
+}
+
 const init = async () => {
   window.__MOVALIO_INSTANCE__ = this;
   await loadDependencies();
@@ -247,6 +251,7 @@ let messaging = null;
 let db = null,
     tx,
     store,
-    index;
+    index,
+    token;
 
 init();
