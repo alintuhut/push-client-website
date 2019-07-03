@@ -191,7 +191,7 @@ function createIndexedDB(name) {
 
   dbPromise.onupgradeneeded = function(event) {
     let db = dbPromise.result,
-        store = db.createObjectStore('client', { keyPath: 'token' }),
+        store = db.createObjectStore('clients', { keyPath: 'token' }),
         index = store.createIndex('token', 'token', { unique: true });
   }
 }
