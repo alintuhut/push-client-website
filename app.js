@@ -182,14 +182,14 @@ function initPostMessageListener() {
 }
 
 function getStoreData() {
-  getData(token);
+  postMessageToSW({action: 'get-data'});
 }
 
 const init = async () => {
   window.app_id = 1;
   await loadDependencies();
   initializeFirebase();
-  //initPostMessageListener();
+  initPostMessageListener();
   check();
   registerServiceWorker();
 };

@@ -53,6 +53,11 @@ self.addEventListener('message', e => {
     case 'save-data':
         storeData(e.data.client, e.data.table);
       break;
+
+    case 'get-data':
+      postMessageToClients('BOSS');
+      getData('1', 'movalio');
+      break;
   }
 });
 
@@ -116,7 +121,7 @@ function createIndexedDB(name, version) {
 
   dbPromise.onupgradeneeded = function(event) {
     let db = dbPromise.result,
-        store = db.createObjectStore('movalio', { keyPath: 'token' }),
+        store = db.createObjectStore('movalio', { keyPath: 'app_id' }),
         index = store.createIndex('token', 'token', { unique: true });
   }
 }
@@ -139,4 +144,9 @@ function getData(key, table) {
   data.onsuccess = function() {
     console.log(data.result);
   }
+}
+
+function postMessageToClients(message) {
+  const channel = new BroadcastChannel('app-channel');
+  channel.postMessage(message);
 }
