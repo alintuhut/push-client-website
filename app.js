@@ -46,7 +46,7 @@ const askForPermissionToReceiveNotifications = async () => {
       console.log('token is:', token);
 
       switch(permission) {
-        case 'grant':
+        case 'granted':
           postMessageToSW({ action: 'subscribe', body: { token, app_id, ua: navigator.userAgent, lang: navigator.language }});
           break;
       }
