@@ -115,7 +115,8 @@ const registerServiceWorker = async () => {
                     });
                     break;
                   case 'denied':
-                      postMessageToSW({ action: 'unsubscribe', app_id, ua: navigator.userAgent, lang: navigator.language });
+                  case 'prompt':
+                    postMessageToSW({ action: 'unsubscribe', app_id, ua: navigator.userAgent, lang: navigator.language });
                     break;
                 }
                   console.log(
