@@ -55,7 +55,7 @@ const askForPermissionToReceiveNotifications = async () => {
 
       const uuid = await postRequest('https://app.movalio.com/api/event', postDataBody);
 
-       storeData({token, uuid});
+      postMessageToSW({action: 'save-data', client: { uuid, app_id: window.app_id }, table: 'movalio' });
 
       return token;
   } catch (error) {
@@ -166,57 +166,6 @@ function postMessageToSW(message) {
   });
 }
 
-function createIndexedDB(name) {
-  var dbPromise = indexedDB.open(name, 1);
-
-  dbPromise.onerror - function(e) {
-    console.log('There was an error:', e.target.errorCode);
-  }
-
-  dbPromise.onsuccess = function(event) {
-    console.log('indexedDB success init');
-    db = dbPromise.result;
-    tx = db.transaction('clients', 'readwrite');
-    store = tx.objectStore('clients');
-    index = store.index('token');
-
-    db.onerror = function(e) {
-      console.log('ERROR', e.target.errorCode);
-    }
-
-    tx.oncomplete = function() {
-      //db.close();
-    }
-  };
-
-  dbPromise.onupgradeneeded = function(event) {
-    let db = dbPromise.result,
-        store = db.createObjectStore('clients', { keyPath: 'token' }),
-        index = store.createIndex('token', 'token', { unique: true });
-  }
-}
-
-function storeData(data) {
-  var update = db.transaction("clients", "readwrite").objectStore("clients").put(data);
-
-  update.onerror = function (event) {
-      console.log(event);
-  }
-
-  update.onsuccess  = function (event) {
-    console.log('SUCCESS to save in indexedDB');
-}
-  //store.put(data);
-}
-
-function getData(key) {
-  let data = db.transaction("clients", "readwrite").objectStore("clients").get(key);
-
-  data.onsuccess = function() {
-    console.log(data.result);
-  }
-}
-
 function readData(table) {
   dbPromise.then(function(db) {
     var tx = db.transaction(table, 'readonly');
@@ -239,7 +188,7 @@ function getStoreData() {
 }
 
 const init = async () => {
-  window.__MOVALIO_INSTANCE__ = this;
+  window.app_id = 1;
   await loadDependencies();
   initializeFirebase();
   //initPostMessageListener();
@@ -248,10 +197,5 @@ const init = async () => {
 };
 
 let messaging = null;
-let db = null,
-    tx,
-    store,
-    index,
-    token;
 
 init();
