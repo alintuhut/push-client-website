@@ -242,7 +242,7 @@ const init = async () => {
   window.__MOVALIO_INSTANCE__ = this;
   await loadDependencies();
   initializeFirebase();
-  initPostMessageListener();
+  //initPostMessageListener();
   check();
   registerServiceWorker();
 };
