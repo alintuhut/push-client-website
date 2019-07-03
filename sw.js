@@ -4,7 +4,7 @@ self.addEventListener('notificationclick', function (event) {
   getData(app_id, 'movalio').then(result => {
     const postDataBody = {
       app_id,
-      action: event ? 'notification:click' : 'notification:action',
+      action: event.notification.tag ? 'notification:action' : 'notification:click',
       uuid: result,
     };
 

@@ -154,16 +154,6 @@ const showLocalNotification = (title, body, swRegistration) => {
   swRegistration.showNotification(title, options);
 };
 
-function postRequest(url, data) {
-  return fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    }),
-  }).then(response => response.json())
-}
-
 function postMessageToSW(message) {
   navigator.serviceWorker.ready
   .then(function(serviceWorkerRegistration) {
