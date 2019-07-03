@@ -169,7 +169,7 @@ function postMessageToSW(message) {
 }
 
 function createIndexedDB(name) {
-  dbPromise = idb.open(name, 1, function(upgradeDb) {
+  dbPromise = indexedDB.open(name, 1, function(upgradeDb) {
     if (!upgradeDb.objectStoreNames.contains('clients')) {
       var client = upgradeDb.createObjectStore('client', { keyPath: 'id', autoIncrement: true });
       client.createIndex('token', 'token', {unique: true});
