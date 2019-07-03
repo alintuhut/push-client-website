@@ -123,6 +123,9 @@ function postRequest(url, data) {
       'Content-Type': 'application/json'
     }),
   }).then(response => response.json())
+    .catch(error => {
+      console.log('ERROR', error);
+    })
 }
 
 function showNotification(title, options) {
