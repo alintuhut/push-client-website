@@ -47,7 +47,10 @@ const askForPermissionToReceiveNotifications = async () => {
 
       switch(permission) {
         case 'granted':
-          postMessageToSW({ action: 'subscribe', body: { token, app_id, ua: navigator.userAgent, lang: navigator.language }});
+          postMessageToSW({ action: 'subscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+          break;
+        case 'denied':
+            postMessageToSW({ action: 'unsubscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
           break;
       }
 
@@ -90,11 +93,26 @@ const registerServiceWorker = async () => {
       navigator.permissions
           .query({ name: 'notifications' })
           .then(function(permissionStatus) {
+            switch(this.state) {
+              case 'prompt':
+                token = await messaging.getToken();
+                postMessageToSW({ action: 'prompt:show', app_id, ua: navigator.userAgent, lang: navigator.language });
+                break;
+            }
               console.log(
                   'notifications permission state is ',
                   permissionStatus.state
               );
               permissionStatus.onchange = function() {
+                switch(this.state) {
+                  case 'granted':
+                    token = await messaging.getToken();
+                    postMessageToSW({ action: 'subscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+                    break;
+                  case 'denied':
+                      postMessageToSW({ action: 'unsubscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+                    break;
+                }
                   console.log(
                       'notifications permission state has changed to ',
                       this.state

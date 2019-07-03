@@ -1,17 +1,19 @@
 self.addEventListener('notificationclick', function (event) {
   console.log('Notification action', event);
 
-  const postDataBody = {
-    app_id: 1,
-    action: 'notification',
-    //token,
-    ua: navigator.userAgent,
-    lang: navigator.language
-  };
+  getData(app_id, 'movalio').then(result => {
+    const postDataBody = {
+      app_id,
+      action: event ? 'notification:click' : 'notification:action',
+      uuid: result,
+    };
 
-  // postRequest(API_ENDPOINT, postDataBody).then(response => {
-  //   console.log('Response', response);
-  // });
+    postRequest(API_ENDPOINT, postDataBody).then(response => {
+
+    }).catch(err => {
+      console.log('ERROR', err);
+    });
+  });
 
   event.notification.close();
 });
@@ -45,11 +47,30 @@ self.addEventListener('message', e => {
   console.log('Receive post message in SW');
   switch(e.data.action) {
     case 'subscribe':
-      app_id = e.data.body.app_id;
-      postRequest(API_ENDPOINT, e.data.body).then(response => {
+      app_id = e.data.app_id;
+      postRequest(API_ENDPOINT, e.body).then(response => {
         storeData({ app_id, uuid: response });
+      }).catch(err => {
+        console.log('ERROR', err);
       });
       break;
+
+    case 'unsubscribe':
+      postRequest(API_ENDPOINT, e.data).then(response => {
+
+      }).catch(err => {
+        console.log('ERROR', err);
+      });
+      break;
+
+    case 'prompt:show', 'prompt:accept', 'prompt:reject':
+      postRequest(API_ENDPOINT, e.data).then(response => {
+
+      }).catch(err => {
+        console.log('ERROR', err);
+      });
+      break;
+
     case 'show-notification':
       console.log('Show notification', e.data);
       if (e.data.notification) {
@@ -77,7 +98,19 @@ messaging.setBackgroundMessageHandler(function(payload) {
 
 self.addEventListener("notificationclose", function(event) {
   console.log('notification close', event);
-  // log send to server
+  getData(app_id, 'movalio').then(result => {
+    const postDataBody = {
+      app_id,
+      action: 'notification:close',
+      uuid: result,
+    };
+
+    postRequest(API_ENDPOINT, postDataBody).then(response => {
+
+    }).catch(err => {
+      console.log('ERROR', err);
+    });
+  })
 });
 
 function postRequest(url, data) {
@@ -91,15 +124,19 @@ function postRequest(url, data) {
 }
 
 function showNotification(title, options) {
-  const postDataBody = {
-    app_id: 1,
-    action: 'notification:show',
-    //token,
-    uuid: '',
-    ua: navigator.userAgent,
-    lang: navigator.language
-  };
-  //postRequest(API_ENDPOINT, postDataBody);
+  getData(app_id, 'movalio').then(result => {
+    const postDataBody = {
+      app_id,
+      action: 'notification:show',
+      uuid: result,
+    };
+
+    postRequest(API_ENDPOINT, postDataBody).then(response => {
+
+    }).catch(err => {
+      console.log('ERROR', err);
+    });
+  });
   return self.registration.showNotification(title,  options);
 }
 
@@ -146,11 +183,18 @@ function storeData(data, table) {
 }
 
 function getData(key, table) {
-  let data = db.transaction(table, 'readwrite').objectStore(table).get(key);
+  return new Promise((resolve, reject) => {
+    let data = db.transaction(table, 'readwrite').objectStore(table).get(key);
 
-  data.onsuccess = function() {
-    console.log(data.result);
-  }
+    data.onsuccess = function() {
+      console.log(data.result);
+      resolve(data.result)
+    };
+
+    data.onerror = function(error) {
+      reject(error);
+    }
+  });
 }
 
 function postMessageToClients(message) {
