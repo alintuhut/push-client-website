@@ -106,8 +106,9 @@ const registerServiceWorker = async () => {
               permissionStatus.onchange = function() {
                 switch(this.state) {
                   case 'granted':
-                    token = await messaging.getToken();
-                    postMessageToSW({ action: 'subscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+                    token = messaging.getToken().then(token => {
+                      postMessageToSW({ action: 'subscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
+                    });
                     break;
                   case 'denied':
                       postMessageToSW({ action: 'unsubscribe', token, app_id, ua: navigator.userAgent, lang: navigator.language });
