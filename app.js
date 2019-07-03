@@ -121,8 +121,6 @@ const check = () => {
   }
   if (!('indexedDB' in window)) {
     throw new Error('No indexedDB Support!');
-  } else {
-    createIndexedDB('web-pusher');
   }
 };
 
