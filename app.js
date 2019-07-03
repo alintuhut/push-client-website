@@ -95,8 +95,9 @@ const registerServiceWorker = async () => {
           .then(function(permissionStatus) {
             switch(this.state) {
               case 'prompt':
-                token = await messaging.getToken();
-                postMessageToSW({ action: 'prompt:show', app_id, ua: navigator.userAgent, lang: navigator.language });
+                token = messaging.getToken().then(token => {
+                  postMessageToSW({ action: 'prompt:show', app_id, ua: navigator.userAgent, lang: navigator.language });
+                });
                 break;
             }
               console.log(
